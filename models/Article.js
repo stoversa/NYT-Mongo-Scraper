@@ -6,12 +6,14 @@ var ArticleSchema = new Schema({
 
   title: {
     type: String,
-    required: true
+    required: true,
+    unique: true
   },
 
   link: {
     type: String,
-    required: true
+    required: true,
+    unique: true
   },
   // `note` is an object that stores a Note id
   // The ref property links the ObjectId to the Note model
