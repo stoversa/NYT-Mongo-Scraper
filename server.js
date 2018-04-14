@@ -8,15 +8,12 @@ const cheerio = require("cheerio"); //Scraper
 // Require all models
 const db = require("./models");
 
-// Controllers
-require("./controllers/api")(app);
-require("./controllers/html")(app);
-
 // Port configuration for local/Heroku
 const PORT = process.env.PORT || process.argv[2] || 8080;
 
 // Initialize Express
 const app = express();
+
 
 // Use body-parser for handling form submissions
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -28,15 +25,16 @@ const exphbs = require("express-handlebars");
 app.engine("handlebars", exphbs({ defaultLayout: "main" }));
 app.set("view engine", "handlebars");
 
+// Controllers
+require("./controllers/api")(app);
+require("./controllers/html")(app);
 // Connect to the Mongo DB
 const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/mongoHeadlines";
 
 // Set mongoose to leverage built in JavaScript ES6 Promises
 // Connect to the Mongo DB
 mongoose.Promise = Promise;
-mongoose.connect(MONGODB_URI, {
-    useMongoClient: true
-});
+mongoose.connect(MONGODB_URI);
 
 // Start the server
 app.listen(PORT, function () {
