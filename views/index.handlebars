@@ -1,11 +1,11 @@
 {{#each articles}}
     <div class="card w-90">
-        <div class="card-header text-white bg-primary"><a href={{link}} target="_blank">{{title}}</a></div>
+        <div class="card-header text-white bg-primary"><a href={{link}} target="_blank" class="text-white">{{title}}</a></div>
         <div class="card-body">
             <p class="card-text">
                 {{summary}}
             </p>
-            <a href="/save/{{id}}" class="btn btn-primary">Save Article</a>
+            <a href="/save/{{_id}}" class="btn btn-primary">Save Article</a>
         </div>
     </div>
 {{/each}}
