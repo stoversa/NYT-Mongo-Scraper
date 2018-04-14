@@ -1,18 +1,22 @@
 // Dependencies
-var express = require("express");
-var bodyParser = require("body-parser"); //JSON responses
-var mongoose = require("mongoose"); //Mongo object modelling 
-var request = require("request"); //Makes http calls
-var cheerio = require("cheerio"); //Scraper
+const express = require("express");
+const bodyParser = require("body-parser"); //JSON responses
+const mongoose = require("mongoose"); //Mongo object modelling 
+const request = require("request"); //Makes http calls
+const cheerio = require("cheerio"); //Scraper
 
 // Require all models
-var db = require("./models");
+const db = require("./models");
+
+// Controllers
+require("./controllers/api")(app);
+require("./controllers/html")(app);
 
 // Port configuration for local/Heroku
 const PORT = process.env.PORT || process.argv[2] || 8080;
 
 // Initialize Express
-var app = express();
+const app = express();
 
 // Use body-parser for handling form submissions
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -25,7 +29,7 @@ app.engine("handlebars", exphbs({ defaultLayout: "main" }));
 app.set("view engine", "handlebars");
 
 // Connect to the Mongo DB
-var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/mongoHeadlines";
+const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/mongoHeadlines";
 
 // Set mongoose to leverage built in JavaScript ES6 Promises
 // Connect to the Mongo DB
