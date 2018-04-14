@@ -3,23 +3,40 @@ const request = require("request"); //Makes http calls
 const cheerio = require("cheerio");
 
 module.exports = function(app){
-    // A GET route for scraping the echoJS website
+ 
+    // A GET route for scraping the NYT website
     app.get("/scrape", function (req, res) {
         // First, we grab the body of the html with request
         request("https://www.nytimes.com/", function (error, response, body) {
             if (!error && response.statusCode === 200) {
                 // Then, we load that into cheerio and save it to $ for a shorthand selector
                 var $ = cheerio.load(body);
-
-                // Now, we grab every h2 within an article tag, and do the following:
-                $(".story-heading").each(function (i, element) {
+                // Now, we grab every article:
+                $('article').each(function (i, element) {
                     // Save an empty result object
-                    var result = {};
-                    // Add the text and href of every link, and save them as properties of the result object
-                    result.title = $(element).children("a").text();
-                    result.link = $(element).children("a").attr("href");
+                    let count = i;
+                    let result = {};
+                    // Add the text and href of every link, and summary and byline, saving them to object
+                    result.title = $(element)
+                        .children('.story-heading')
+                        .children('a')
+                        .text().trim();
+                    result.link = $(element)
+                        .children('.story-heading')
+                        .children('a')
+                        .attr("href");
+                    result.summary = $(element)
+                        .children('.summary')
+                        .text().trim()
+                        || $(element)
+                            .children('ul')
+                            .text().trim();
+                    result.byline = $(element)
+                        .children('.byline')
+                        .text().trim()
+                        || 'No byline available'
                     
-                    if (result.title && result.link){
+                    if (result.title && result.link && result.summary){
                         // Create a new Article using the `result` object built from scraping, but only if both values are present
                         db.Article.create(result)
                             .then(function (dbArticle) {
@@ -33,13 +50,35 @@ module.exports = function(app){
                     };
                 });
                 // If we were able to successfully scrape and save an Article, send a message to the client
-                res.send("Scrape Complete");
+                res.send(`Scrape complete: Added 20 new articles`);
             }
             else if (error || response.statusCode != 200){
                 res.send("Error: Unable to obtain new articles")
             }
         });
     }),
+
+    app.get("/", (req, res) => {
+        db.Article.find({})
+            .then(function (dbArticle) {
+                // If we were able to successfully find Articles, send them back to the client
+                let hbsObject;
+                if (dbArticle){
+                    hbsObject = {
+                        articles: dbArticle
+                    };
+                    res.render("index", hbsObject);
+                }
+                else {
+                    res.render("index", hbsObject);
+                }
+                
+            })
+            .catch(function (err) {
+                // If an error occurred, send it to the client
+                res.json(err);
+            });
+    });
 
     // Route for getting all Articles from the db
     app.get("/articles", function (req, res) {
