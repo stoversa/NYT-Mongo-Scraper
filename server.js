@@ -27,7 +27,6 @@ app.set("view engine", "handlebars");
 
 // Controllers
 require("./controllers/api")(app);
-require("./controllers/html")(app);
 // Connect to the Mongo DB
 const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/mongoHeadlines";
 
