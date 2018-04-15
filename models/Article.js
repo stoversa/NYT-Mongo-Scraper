@@ -30,6 +30,7 @@ var ArticleSchema = new Schema({
 
   isSaved: {
     type: Boolean,
+    default: false,
     required: false,
     unique: false
   },
