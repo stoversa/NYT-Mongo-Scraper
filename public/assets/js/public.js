@@ -10,17 +10,6 @@ $(document).ready(function () {
         })
     });
     
-    $('.delete-note').click(function (event) {
-        event.preventDefault();
-        const id = $(this).attr("data");
-        $.ajax(`/note/${id}`, {
-            type: "DELETE"
-        }).then(function () {
-            location.reload();
-        });
-        $('#note-modal').modal('toggle');
-    });
-
     // event handler for opening the note modal
     $(".note-btn").click(function (event) {
         event.preventDefault();
@@ -34,7 +23,7 @@ $(document).ready(function () {
             $('.articles-available').empty();
             if (data[0].note.length > 0){
                 data[0].note.forEach(v => {
-                    $('.articles-available').append($(`<li class='list-group-item'>${v.text}<button type='button' class='btn btn-danger btn-sm float-right delete-note' data='${v._id}'>X</button></li>`));
+                    $('.articles-available').append($(`<li class='list-group-item'>${v.text}<button type='button' class='btn btn-danger btn-sm float-right btn-deletenote' data='${v._id}'>X</button></li>`));
                 })
             }
             else {
@@ -43,6 +32,19 @@ $(document).ready(function () {
             }
         })
         $('#note-modal').modal('toggle');
+    });
+
+    // $('.btn-deletenote').click(function (event) {})
+    $(document).on('click', '.btn-deletenote', function (){
+            event.preventDefault();
+            console.log($(this).attr("data"))
+            const id = $(this).attr("data");
+            console.log(id);
+            $.ajax(`/note/${id}`, {
+                type: "DELETE"
+            }).then(function () {
+                $('#note-modal').modal('toggle');
+            });
     });
 
     $("#save-note").click(function (event) {
