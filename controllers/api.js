@@ -5,12 +5,14 @@ const request = require("request"); //Makes http calls
 const cheerio = require("cheerio");
  
 // A GET route for scraping the NYT website
-router.get("/scrape", function (req, res) {
+router.get("/scrape", (req, res) => {
+    console.log("scrape ran")
     // First, we grab the body of the html with request
-    request("https://www.nytimes.com/", function (error, response, body) {
+    request("https://www.nytimes.com/", (error, response, body) => {
         if (!error && response.statusCode === 200) {
             // Then, we load that into cheerio and save it to $ for a shorthand selector
-            var $ = cheerio.load(body);
+            const $ = cheerio.load(body);
+            let count = 0;
             // Now, we grab every article:
             $('article').each(function (i, element) {
                 // Save an empty result object
@@ -47,35 +49,28 @@ router.get("/scrape", function (req, res) {
                             // If an error occurred, send it to the client
                             return res.json(err);
                         });
+                    count++;
                 };
             });
-            // If we were able to successfully scrape and save an Article, send a message to the client
-            res.send(`Scrape complete: Added 20 new articles`);
+            // If we were able to successfully scrape and save an Article, redirect to index
+            res.redirect('/')
         }
         else if (error || response.statusCode != 200){
             res.send("Error: Unable to obtain new articles")
         }
     });
-}),
+});
 
 router.get("/", (req, res) => {
     db.Article.find({})
         .then(function (dbArticle) {
             // If we were able to successfully find Articles, send them back to the client
             const retrievedArticles = dbArticle;
-            if (retrievedArticles !== [] ){
-                let hbsObject;
-                hbsObject = {
-                    articles: dbArticle
-                };
-                res.render("index", hbsObject);
-                console.log("The first thing ran!!")
-            }
-            else {
-                res.render("noarticles");
-                console.log("This thing ran!!")
-            }
-            
+            let hbsObject;
+            hbsObject = {
+                articles: dbArticle
+            };
+            res.render("index", hbsObject);        
         })
         .catch(function (err) {
             // If an error occurred, send it to the client
@@ -92,8 +87,6 @@ router.get("/saved", (req, res) => {
                 articles: retrievedArticles
             };
             res.render("saved", hbsObject);
-            console.log("The first thing ran!!")
-            
         })
         .catch(function (err) {
             // If an error occurred, send it to the client
@@ -116,7 +109,27 @@ router.get("/articles", function (req, res) {
 });
 
 router.put("/save/:id", function (req, res) {
-    db.Article.findOneAndUpdate({ _id: req.params.id }, { isSaved: true }, { new: false });
+    db.Article.findOneAndUpdate({ _id: req.params.id }, { isSaved: true })
+        .then(function (data) {
+            // If we were able to successfully find Articles, send them back to the client
+            res.json(data);
+        })
+        .catch(function (err) {
+            // If an error occurred, send it to the client
+            res.json(err);
+        });;
+});
+
+router.put("/remove/:id", function (req, res) {
+    db.Article.findOneAndUpdate({ _id: req.params.id }, { isSaved: false })
+        .then(function (data) {
+            // If we were able to successfully find Articles, send them back to the client
+            res.redirect("/saved");
+        })
+        .catch(function (err) {
+            // If an error occurred, send it to the client
+            res.json(err);
+        });
 });
 
 // Route for grabbing a specific Article by id, populate it with it's note
