@@ -10,7 +10,7 @@
                 <span class="sr-only">(current)</span>
             </a>
             <a class="nav-item nav-link" href="/saved">Saved Articles</a>
-            <button type="button" class="btn btn-danger" id="scrape">Scrape NYT</button>
+            <a href="/scrape" class="btn btn-danger active" role="button" aria-pressed="true">Scrape NYT</a>
         </div>
     </div>
 </nav>
@@ -26,6 +26,7 @@
     </div>
     <div class=row>
         <div class="col-12">
+            {{#if articles}}
             {{#each articles}}
                 <div class="card w-90">
                     <div class="card-header text-white bg-primary">
@@ -41,9 +42,17 @@
                     </div>
                 </div>
             {{/each}}
+            {{else}}
+                <div class="card text-white bg-warning w-90 p-1">
+                    <div class="card-body text-center">
+                        Uh oh. Looks like we don't have any new articles
+                    </div>
+                </div>
+            {{/if}}
         </div>
     </div>
 </div>
+{{#if new}}
 <div class="modal fade" id="status-modal" tabindex="-1" role="dialog" aria-labelledby="successMessage" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -61,21 +70,5 @@
         </div>
     </div>
 </div>
-<div class="modal fade" id="note-modal" tabindex="-1" role="dialog" aria-labelledby="successMessage" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Modal title</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <p>Scrapey scrapey</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
+{{/if}}
+
