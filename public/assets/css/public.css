@@ -1,0 +1,26 @@
+.background-image{
+    background-color: red;
+    background-image: url("../images/newspaper.jpg");
+    
+}
+
+@media (min-width: 1px) {
+    .display-1 {
+        font-size: 4rem
+    }
+}
+
+@media (min-width: 576px) {
+    .display-1{
+        font-size: 5rem
+    }
+    
+}
+
+/*Medium devices (tablets, 768px and up)*/
+@media (min-width: 768px) {
+    .display-1 {
+        font-size: 6rem
+    }
+    
+}
