@@ -1,6 +1,13 @@
 # NYT-Mongo-Scraper
 This is a Node.js application that utilizes Cheerio and a MongoDB back-end to scrape and save NYT articles to a Bootstrap UI.
 
+## Feature Overview
+Scrape the New York Times homepage, then save and add notes to your favorite articles using this responsive application.
+
+![NYT Scape Demo](public/assets/images/app_demo.gif "NYT Mongo Scraper Demo")
+
+For a live example, see a deployed version to Heroku at [https://nyt-mongoscraper-ss.herokuapp.com/](https://nyt-mongoscraper-ss.herokuapp.com/ "deployed example")
+
 ## Downloading This Application
 To use this application:
 
@@ -32,4 +39,3 @@ This application utilizes the following NPM packages:
 - [body-parser](https://www.npmjs.com/package/body-parser "body-parser")
 - [cheerio](https://www.npmjs.com/package/cheerio "cheerio")
 - [request](https://www.npmjs.com/package/request "request")
-
