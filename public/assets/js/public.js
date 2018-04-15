@@ -30,6 +30,7 @@ $(document).ready(function () {
         $.ajax(`/articles/${id}`, {
             type: "GET"
         }).then(function (data) {
+            console.log(data)
             $('.articles-available').empty();
             if (data[0].note.length > 0){
                 data[0].note.forEach(v => {
